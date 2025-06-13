@@ -1,0 +1,83 @@
+managed with additional save implementation in class ZBP_R_GE187815 unique;
+strict ( 2 );
+with draft;
+extensible;
+define behavior for ZR_GE187815 alias ShoppingCart
+persistent table ZGE187815
+extensible
+draft table ZGE187815_D
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master( global )
+
+{
+  field ( readonly )
+   OrderUuid,
+   CreatedBy,
+   CreatedAt,
+   LastChangedBy,
+   LastChangedAt,
+   LocalLastChangedAt,
+   OrderId;
+
+  field ( numbering : managed )
+   OrderUuid;
+
+   field ( mandatory )
+    OrderQuantity,
+    OrderedItem,
+    RequestedDeliveryDate;
+
+  create;
+  update;
+  delete;
+
+  validation validateOrderedItem on save { create; field OrderedItem; }
+  validation validateRequestedDeliveryDate on save { create; field RequestedDeliveryDate; }
+  validation validateOrderQuantity on save { create; field OrderQuantity; }
+
+  determination setStatusToNew on modify { create; }
+  determination calculateOrderID on save { create; }
+  determination setStatusToSave on save { create; }
+
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare {
+    validation validateOrderedItem;
+    validation validateRequestedDeliveryDate;
+    validation validateOrderQuantity;
+  }
+
+  // side effect events
+  event statusUpdated for side effects;
+
+  side effects {
+    event statusUpdated affects field ( TotalPrice, Notes, OverallStatus, SalesOrderStatus, Salesorder, ManageSalesOrderUrl );
+  }
+
+  mapping for ZGE187815 corresponding extensible
+  {
+    OrderUuid = order_uuid;
+    OrderId = order_id;
+    OrderedItem = ordered_item;
+    OrderQuantity = order_quantity;
+    RequestedDeliveryDate = requested_delivery_date;
+    TotalPrice = total_price;
+    Currency = currency;
+    OverallStatus = overall_status;
+    SalesOrderStatus = sales_order_status;
+    Salesorder = salesorder;
+    BgpfStatus = bgpf_status;
+    BgpgProcessName = bgpg_process_name;
+    ManageSalesOrderUrl = manage_sales_order_url;
+    Notes = notes;
+    CreatedBy = created_by;
+    CreatedAt = created_at;
+    LastChangedBy = last_changed_by;
+    LastChangedAt = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+
+}

@@ -1,0 +1,36 @@
+projection implementation in class ZBP_C_GE187815 unique;
+strict ( 2 );
+extensible;
+use draft;
+use side effects;
+define behavior for ZC_GE187815 alias ShoppingCart
+extensible
+use etag
+
+{
+  use create;
+  use update;
+  use delete;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  // enable external use of event
+  use event statusUpdated;
+
+  // Should be updatable via EML calls
+  // that are not using "in local mode"
+  field ( readonly )
+    OverallStatus,
+    SalesOrderStatus,
+    Salesorder,
+    TotalPrice,
+    BgpfStatus,
+    BgpgProcessName,
+    ManageSalesOrderUrl,
+    Notes;
+
+}

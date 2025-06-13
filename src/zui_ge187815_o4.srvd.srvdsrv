@@ -1,0 +1,11 @@
+@EndUserText: {
+  label: 'Service Definition for ZC_GE187815'
+}
+@ObjectModel: {
+  leadingEntity: {
+    name: 'ZC_GE187815'
+  }
+}
+define service ZUI_GE187815_O4 provider contracts odata_v4_ui {
+  expose ZC_GE187815 as ShoppingCart;
+}
